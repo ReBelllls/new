@@ -450,7 +450,7 @@ client.on('message', message => {
 });
  
  client.on('guildMemberAdd', member => {
-    let channel = member.guild.channels.find('name', 'dragon');
+    let channel = member.guild.channels.find('name', '😎♣❨☞․welcome․☜❩♣');
     let memberavatar = member.user.avatarURL
       if (!channel) return; 
     let embed = new Discord.RichEmbed()
@@ -490,7 +490,7 @@ client.on('guildMemberAdd', member => {
     const ei = invites[member.guild.id];
     const invite = guildInvites.find(i => ei.get(i.code).uses < i.uses);
     const inviter = client.users.get(invite.inviter.id);
-    const yumz = member.guild.channels.find("name", "dragon");
+    const yumz = member.guild.channels.find("name", "😎♣❨☞․welcome․☜❩♣");
      yumz.send(`<@${member.user.id}> joined by <@${inviter.id}>`);
    //  yumz.send(`<@${member.user.id}> joined using invite code ${invite.code} from <@${inviter.id}>. Invite was used ${invite.uses} times since its creation.`);
   }); 
