@@ -99,7 +99,7 @@ client.on('message', msg => {
 }
 })
 client.on('ready', () => {
-    client.channels.get("522093211255046165").join(); 
+    client.channels.get("512771673683001364").join(); 
     });
 
 
@@ -114,7 +114,7 @@ client.on('message', function(message) {
         .setThumbnail(`${message.author.avatarURL}`)
         .setDescription(`\n\n\`\`\`${message.content}\`\`\``)
         .setFooter(`From **${message.author.tag} (${message.author.id})**`)
-    client.channels.get("522091882445275148").send({embed:RaYaN});
+    client.channels.get("522197612787662848").send({embed:RaYaN});
     }
 });
 
