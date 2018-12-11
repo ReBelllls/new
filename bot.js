@@ -106,7 +106,6 @@ client.on('message', function(message) {
 });
 
 
-4 KB
 const welcome = JSON.parse(fs.readFileSync('./welcomer.json' , 'utf8'));
  
 client.on('message', message => {
