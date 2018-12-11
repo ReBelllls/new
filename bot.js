@@ -153,6 +153,6 @@ client.channels.find('id', '522173102495498240').setName("Welcome To P");
 client.channels.find('id', '522173102495498240').setName("Welcome To Pr");
 client.channels.find('id', '522173102495498240').setName("Welcome To Pro");
 client.channels.find('id', '522173102495498240').setName("Welcome To  Pros");
-  }, 60000);
+  }, 3000);
 });
 client.login(process.env.BOT_TOKEN);
