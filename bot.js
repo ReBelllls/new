@@ -125,43 +125,5 @@ client.on('message',async message => {
 });
 
 
-const Eris = require("eris");
-var Acura = new Eris("token");
-Acura.on("ready", () => {
-    console.log("tm");
-    onstart();
-});
-Acura = "521785114439450644";
-nick = "Syestem Pros";
-function onstart(){
-    var v1 = nick.split('');
-    var counter;
-    var i=0;
-varAcura 2 = ' ';
-  var Acura =   setInterval(function(){
-
-     if (i == v1.length){
-     clearInterval(Acura);
-     onstart()
-      return;
-     }
-     var v2 = v1[i];
-   Acura  += v2;
-    Acura.editNickname(Acura);
- 
-        i++;
-
-     }, 1000);
-}
-Acura.connect();
-
-
-
-client.on("ready", () => {
-  function lol() {
-    client.guilds.get('521785114439450644').roles.find("name", "@OWNER").setColor("RANDOM");
-  }
-  setInterval(lol, 6000);
-})
 
 client.login(process.env.BOT_TOKEN);
