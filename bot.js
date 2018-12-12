@@ -30,262 +30,6 @@ client.on('ready', () => {
 });
 
 
-client.on('guildBanAdd', function(guild) {
-            const rebellog = client.channels.find("name", "log"),
-            Onumber = 3,
-  Otime = 10000
-guild.fetchAuditLogs({
-    type: 22
-}).then(audit => {
-    let banner = audit.entries.map(banner => banner.executor.id)
-    let bans = guilds[guild.id + banner].bans || 0
-    guilds[guild.id + banner] = {
-        bans: 0
-    }
-      bans[guilds.id].bans += 1;
-if(guilds[guild.id + banner].bans >= Onumber) {
-try {
-let roles = guild.members.get(banner).roles.array();
-guild.members.get(banner).removeRoles(roles);
-  guild.guild.member(banner).kick();
-
-} catch (error) {
-console.log(error)
-try {
-guild.members.get(banner).ban();
-  rebellog.send(`<@!${banner.id}>
-حآول العبث بالسيرفر @everyone`);
-guild.owner.send(`<@!${banner.id}>
-حآول العبث بالسيرفر ${guild.name}`)
-    setTimeout(() => {
- guilds[guild.id].bans = 0;
-  },Otime)
-} catch (error) {
-console.log(error)
-}
-}
-}
-})
-});
- let channelc = {};
-
-
-  client.on('channelCreate', async (channel) => {
-  const rebellog = client.channels.find("name", "log"),
-  Oguild = channel.guild,
-  Onumber = 3,
-  Otime = 10000;
-  const audit = await channel.guild.fetchAuditLogs({limit: 1});
-  const channelcreate = audit.entries.first().executor;
-  console.log(` A ${channel.type} Channel called ${channel.name} was Created By ${channelcreate.tag}`);
-   if(!channelc[channelcreate.id]) {
-    channelc[channelcreate.id] = {
-    created : 0
-     }
- }
- channelc[channelcreate.id].created += 1;
- if(channelc[channelcreate.id].created >= Onumber ) {
-    Oguild.members.get(channelcreate.id).kick();
-rebellog.send(`<@!${channelcreate.id}>
-حآول العبث بالسيرفر @everyone`);
-channel.guild.owner.send(`<@!${channelcreate.id}>
-حآول العبث بالسيرفر ${channel.guild.name}`)
-}
-  setTimeout(() => {
- channelc[channelcreate.id].created = 0;
-  },Otime)
-  });
-
-let channelr = {};
-  client.on('channelDelete', async (channel) => {
-  const rebellog = client.channels.find("name", "log"),
-  Oguild = channel.guild,
-  Onumber = 3,
-  Otime = 10000;
-  const audit = await channel.guild.fetchAuditLogs({limit: 1});
-  const channelremover = audit.entries.first().executor;
-  console.log(` A ${channel.type} Channel called ${channel.name} was deleted By ${channelremover.tag}`);
-   if(!channelr[channelremover.id]) {
-    channelr[channelremover.id] = {
-    deleted : 0
-     }
- }
- channelr[channelremover.id].deleted += 1;
- if(channelr[channelremover.id].deleted >= Onumber ) {
-  Oguild.guild.member(channelremover).kick();
-rebellog.send(`<@!${channelremover.id}>
-حآول العبث بالسيرفر @everyone`);
-channel.guild.owner.send(`<@!${channelremover.id}>
-حآول العبث بالسيرفر ${channel.guild.name}`)
-}
-  setTimeout(() => {
- channelr[channelremover.id].deleted = 0;
-  },Otime)
-  });
-
-
-
-
-
-
-
-
-
-
-client.on("ready", () => {
-    console.log("I'm ready to do work!");//// BY MAL , CODES
-
-});
-
-const slowmode_mentions = new Map();
-const slowmode_links = new Map();
-const slowmode_attachments = new Map(); //// BY MAL , CODES
-
-const ratelimit = 7500; // within 7.5 seconds
-const logChannel = "517414659712614411"; // logs channel id
-
-client.on("message", message => { //// BY MAL , CODES
-
-
-    if (message.content.startsWith("!ping")) {
-        let startTime = Date.now();
-        message.channel.send("Ping...").then(newMessage => {
-            let endTime = Date.now();
-            newMessage.edit("Pong! Took `" + Math.round(endTime - startTime) + "ms`!");
-        });
-    }
-
-    function log(logmessage) {//// BY MAL , CODES
-        if (message.guild.channels.has(logChannel)) {
-            message.guild.channels.get(logChannel).send({ embed: logmessage}).then().catch(err => console.log(err));
-        }
-    }
-
-
-    let banLevel = { //// BY MAL , CODES
-
-        "mentions": 10,
-        "links": 10,
-        "attachments": 10
-    };
-
-
-    if (message.author.bot || !message.guild || !message.member || !message.guild.member(client.user).hasPermission("BAN_MEMBERS") || message.member.hasPermission("MANAGE_MESSAGES")) return;
-
-
-    if (message.mentions.users.size == 1 && message.mentions.users.first().bot) return;
-
-
-    let entry_mentions = slowmode_mentions.get(message.author.id);
-    let entry_links = slowmode_links.get(message.author.id);
-    let entry_attachments = slowmode_attachments.get(message.author.id);
-
-    if (!entry_mentions) {
-        entry_mentions = 0;
-        slowmode_mentions.set(message.author.id, entry_mentions);
-    }
-    if (!entry_links) { //// BY MAL , CODES
-
-        entry_links = 0;
-        slowmode_links.set(message.author.id, entry_links);
-    }
-    if (!entry_attachments) {
-        entry_attachments = 0;
-        slowmode_attachments.set(message.author.id, entry_attachments);
-    }
-
-
-    entry_mentions += message.mentions.users.size + message.mentions.roles.size;
-    entry_links += message.embeds.length;
-    entry_attachments += message.attachments.size;
-
-    slowmode_mentions.set(message.author.id, entry_mentions);
-    slowmode_links.set(message.author.id, entry_links);
-    slowmode_attachments.set(message.author.id, entry_attachments);
-
-
-    if (entry_links > banLevel.links) {
-        message.member.ban(1).then(member => {
-            message.channel.send(`:ok_hand: banned \`${message.author.tag}\` for \`link spam\``);
-            log(new Discord.RichEmbed().setTitle(':hammer: Banned').setColor(0xFF0000).setTimestamp().addField('User', `${message.author.tag} (${message.author.id})`).addField('Reason', `Posting too many links (${entry_links}x)`));
-            slowmode_links.delete(message.author.id);
-        })
-        .catch(e => {
-            log(new Discord.RichEmbed().setTitle(':x: ERROR').setColor(0x000001).setTimestamp().addField('User', `${message.author.tag} (${message.author.id})`).addField('Reason', `Could not ban because they have a higher role`));
-        });
-    } else {
-        setTimeout(()=> {
-            entry_links -= message.embeds.length;
-            if(entry_links <= 0) slowmode_links.delete(message.author.id);
-        }, ratelimit);
-    }
-
-    if (entry_mentions > banLevel.mentions) {
-        message.member.ban(1).then(member => {
-            message.channel.send(`:ok_hand: banned \`${message.author.tag}\` for \`mention spam\``);
-            log(new Discord.RichEmbed().setTitle(':hammer: Banned').setColor(0xFF0000).setTimestamp().addField('User', `${message.author.tag} (${message.author.id})`).addField('Reason', `Mentioning too many users (${entry_mentions}x)`));
-            slowmode_mentions.delete(message.author.id);
-        })
-        .catch(e => {
-            log(new Discord.RichEmbed().setTitle(':x: ERROR').setColor(0x000001).setTimestamp().addField('User', `${message.author.tag} (${message.author.id})`).addField('Reason', `Could not ban because they have a higher role`));
-        });
-    } else {
-        setTimeout(()=> {
-            entry_mentions -= message.mentions.users.size + message.mentions.roles.size;
-            if(entry_mentions <= 0) slowmode_mentions.delete(message.author.id);
-        }, ratelimit);
-    }
-
-    if (entry_attachments > banLevel.attachments) {
-        message.member.ban(1).then(member => {
-            message.channel.send(`:ok_hand: banned \`${message.author.tag}\` for \`image spam\``);
-            log(new Discord.RichEmbed().setTitle(':hammer: Banned').setColor(0xFF0000).setTimestamp().addField('User', `${message.author.tag} (${message.author.id})`).addField('Reason', `Posting too many images (${entry_attachments}x)`));
-            slowmode_attachments.delete(message.author.id);
-        })
-        .catch(e => {
-            log(new Discord.RichEmbed().setTitle(':x: ERROR').setColor(0x000001).setTimestamp().addField('User', `${message.author.tag} (${message.author.id})`).addField('Reason', `Could not ban because they have a higher role`));
-        });
-    } else {
-        setTimeout(()=> {
-            entry_attachments -= message.attachments.size;
-            if(entry_attachments <= 0) slowmode_attachments.delete(message.author.id);
-        }, ratelimit);
-    }
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 client.on('message', message => {
     var prefix = "$";
@@ -1100,6 +844,73 @@ client.on('message', msg => {
 
 
 
+
+
+client.on("message", message => {
+ if (message.content === "$help") {
+        message.react("😘")
+           message.react("😵")
+  const embed = new Discord.RichEmbed()
+      .setColor("#ffff00")
+      .setThumbnail(message.author.avatarURL)
+      .setDescription(`
+-:rocket: سرعه اتصال ممتازه
+-:sunglasses: سهل الاستخدام
+-:warning: صيانه كل يوم
+-:dollar: مجاني بل كامل
+-:books:البوت عربي و سيتم اضافه اللغه النكليزية
+
+
+● ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ●
+
+:gem:『اوامر عامة』:gem:
+:gem:$server 『معلومات عن السيرفر』
+:gem:$date 『لمعرفه التاريخ』
+:gem:$ping 『لمعرفه سرعه البوت』
+:gem:$members 『معلومات عن الاعضاء』
+
+● ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ●
+
+:crown:『اوامر ادارية』:crown:
+:crown:$ban 『لتعطي شخص باند』
+:crown:$kick 『لتعطي شخص كيك』
+
+● ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ●
+
+:video_game:『العاب』:video_game:
+:video_game:$تهكير
+:video_game:قريبا
+
+● ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ●
+:flower_playing_cards:『اوامر الصور』:flower_playing_cards:
+
+:flower_playing_cards:قريبا
+
+● ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ●
+
+:dolls:『انواع الترحيب』:dolls:
+:dolls: ترحيب 1 / ترحيب 2
+:dolls: ترحيب 3 / ترحيب 4
+:dolls: ترحيب 5 / ترحيب 6
+:dolls: ترحيب 7 / ترحيب 8
+:dolls: ترحيب 9 / ترحيب 10
+
+
+● ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ●
+
+ملاحظه للتقديم علي رتبه اكتب 
+$apply
+
+
+
+
+`)
+
+
+message.author.sendEmbed(embed)
+
+}
+});
 
 
 
