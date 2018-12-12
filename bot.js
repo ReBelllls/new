@@ -603,10 +603,10 @@ client.on('message', async message => {
                                                 .addField('ايدي حسابه', message.author.id, true)
                                                
                                                 subChannel.send(subMsg).then(msgS => {
-                                                    msgS.react('?').then(() => msgS.react('?'))
+                                                    msgS.react('✅').then(() => msgS.react('❎'))
                                                    
-                                                    let accept = (reaction, user) => reaction.emoji.name === '?'  && user.id === '472413769700474901'
-                                                    let noAccept = (reaction, user) => reaction.emoji.name === '?' && user.id === '472413769700474901'
+                                                    let accept = (reaction, user) => reaction.emoji.name === '✅'  && user.id === '472413769700474901'
+                                                    let noAccept = (reaction, user) => reaction.emoji.name === '❎' && user.id === '472413769700474901'
                                                    
                                                     let acceptRe = msgS.createReactionCollector(accept);
                                                     let noAcceptRe = msgS.createReactionCollector(noAccept);
