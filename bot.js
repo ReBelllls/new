@@ -529,55 +529,116 @@ message.author.send(`
 
 
 
-
 client.on('message', async message => {
-  if(message.content.startsWith(prefix + "$apply")) {
-    await message.channel.send("**الاسم**").then(e => {
-    let filter = m => m.author.id === message.author.id
-    let lan = '';
-    let md = '';
-    let br = '';
-    let chaLan = message.channel.awaitMessages(filter, { max: 1, time: 40000, errors: ['time'] })
-    .then(collected => {
-      lan = collected.first().content
-      collected.first().delete()
-e.delete();
-     message.channel.send('**العمر**').then(m => {
-let chaMd = message.channel.awaitMessages(filter, { max: 1, time: 40000, errors: ['time'] })
-.then(co => {
-  md = co.first().content
-        co.first().delete()
-        m.delete();
-message.channel.send('**ماذا تستطيع ان تقدم للسيرفر**').then(ms => {
-let br = message.channel.awaitMessages(filter, { max: 1, time: 40000, errors: ['time'] })
-.then(col => {
-  br = col.first().content
-        col.first().delete()
-
-ms.delete()
-
- message.channel.send('جاري التقديم ..').then(b => {
-        setTimeout(() => {
-  b.edit(`**تم التقديم وسيتم الرد فـ اقرب وقت**`)
-        },2000);
-var gg = message.guild.channels.find('name', 'التقديمات')
-if(!gg) return;
-if(gg) {
-gg.send({embed : new Discord.RichEmbed()
-.setDescription(`**  الاسم :question:  : \n ${lan}\nالعمر :link: :\n ${md} \n ماذا تستطيع ان تقدم للسيرفر :question: :\n ${br}  \nتم التقديم بواسطة  : <@${message.author.id}> **`)  
-          .setFooter(`ادارة السيرفر`)
-.setTimestamp()
+    var command = message.content.toLowerCase().split(" ")[0];
+    var prefix = '$';// Alpha Codes
+    var name = '';// Alpha Codes
+    var age = '';// Alpha Codes
+    var fromwhere = '';// Alpha Codes
+    var fa2dh = '';// Alpha Codes
+    var filter = m => m.author.id === message.author.id;// Alpha Codes
+    var subChannel = message.guild.channels.find(c => c.name === 'moderator-apply');// Alpha Codes
+   
+    if(command == prefix + 'apply') {// Alpha Codes
+        if(message.author.bot) return;
+        if(message.channel.type === 'dm') return;
+ 
+        var modRole = message.guild.roles.find(r => r.name === 'Moderator');// Alpha Codes
+       
+        if(message.guild.member(message.author).roles.has(modRole.id)) return message.channel.send(':x: | معك الرتبة');// Alpha Codes
+        if(!subChannel) return message.channel.send(':x: | يجب ان يتوفر روم اسمه `moderator-apply`');// Alpha Codes
+       
+        message.channel.send(':timer: | **اكتب اسمك الحقيقي الان من فضلك**').then(msgS => {
+            message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(collected => {
+                name = collected.first().content;
+                collected.first().delete();
+                msgS.edit(':timer: | **من فضلك اكتب عمرك الان**').then(msgS => {
+                    message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(collected => {
+                        age = collected.first().content;
+                        collected.first().delete();
+                        msgS.edit(':timer: | **من فضلك اكتب من اي بلد انت**').then(msgS => {
+                            message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(collected => {
+                                fromwhere = collected.first().content;
+                                collected.first().delete();
+                                msgS.edit(':timer: | **وش تعرف تسوي ؟**').then(msgS => {
+                                    message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] }).then(collected => {
+                                        fa2dh = collected.first().content;
+                                        collected.first().delete();
+                                       
+                                        let embedS = new Discord.RichEmbed()
+                                        .setAuthor(message.author.tag, message.author.avatarURL)
+                                        .setThumbnail(message.author.avatarURL)
+                                        .setDescription('**\n:no_entry: هل انت متأكد انك تريد التقديم؟**')
+                                        .setColor('GREEN')
+                                        .addField('الاسم', name, true)
+                                        .addField('العمر', age, true)
+                                        .addField('من وين', fromwhere, true)
+                                        .addField('وش تعرف تسوي ؟', fa2dh, true)
+                                        .setTimestamp()
+                                        .setFooter(message.guild.name, message.guild.iconURL)
+                                       
+                                        msgS.delete();
+                                        message.channel.send(embedS).then(msgS => {
+                                            msgS.react('?').then(() => msgS.react('?'))
+                                           
+                                            let yesSure = (reaction, user) => reaction.emoji.name === '?'  && user.id === message.author.id;
+                                            let no = (reaction, user) => reaction.emoji.name === '?' && user.id === message.author.id;
+                                           
+                                            let yesSend = msgS.createReactionCollector(yesSure);
+                                            let dontSend = msgS.createReactionCollector(no);
+                                           
+                                            yesSend.on('collect', r => {
+                                                msgS.delete();
+                                                message.channel.send(':white_check_mark: | تم تقديم طلبك للادارة ').then(msg => msg.delete(5000));
+                                               
+                                                let subMsg = new Discord.RichEmbed()
+                                                .setAuthor(message.author.tag, message.author.avatarURL)
+                                                .setColor('GREEN')
+                                                .setThumbnail(message.author.avatarURL)
+                                                .addField('الاسم', name)
+                                                .addField('العمر', age)
+                                                .addField('من وين', fromwhere)
+                                                .addField('لماذا يريد التقديم', fa2dh)
+                                                .addField('حسابه', message.author)
+                                                .addField('ايدي حسابه', message.author.id, true)
+                                               
+                                                subChannel.send(subMsg).then(msgS => {
+                                                    msgS.react('?').then(() => msgS.react('?'))
+                                                   
+                                                    let accept = (reaction, user) => reaction.emoji.name === '?'  && user.id === '472413769700474901'
+                                                    let noAccept = (reaction, user) => reaction.emoji.name === '?' && user.id === '472413769700474901'
+                                                   
+                                                    let acceptRe = msgS.createReactionCollector(accept);
+                                                    let noAcceptRe = msgS.createReactionCollector(noAccept);
+                                                   
+                                                    acceptRe.on('collect', r => {
+                                                        msgS.delete();
+                                                        message.author.send(`:white_check_mark: | تم قبولك اداري بسيرفر **${message.guild.name}**`);
+                                                        message.guild.member(message.author).addRole(modRole.id);
+                                                        message.guild.channels.find(r => r.name === 'support-accept').send(`:white_check_mark: | تم قبولك [ <@${message.author.id}> ]`);
+                                                    }).catch();
+                                                    noAcceptRe.on('collect', r => {
+                                                        msgS.delete();
+                                                        message.author.send(`:x: | تم رفضك بسيرفر **${message.guild.name}**`);
+                                                        message.guild.channels.find(r => r.name === 'support-accept').send(`:x: | تم رفضك [ <@${message.author.id}> ]`);
+                                                    }).catch();
+                                                })
+                                            });// Alpha Codes
+                                            dontSend.on('collect', r => {
+                                                msgS.delete();
+                                                message.channel.send(':x: | تم الغاء تقديمك');// Alpha Codes
+                                            });
+                                        })
+                                    })
+                                })
+                            })
+                        })
+                    })
+                })
+            })
+        })
+    }
 });
-}        
-})
-})
-})
-})
-})
-})
-})
- }
-})
 
 
 
