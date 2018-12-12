@@ -537,18 +537,21 @@ if(message.content === '$help') {
   var EsTeKnAN = new Discord.RichEmbed()
   .setColor('RANDOM')
 message.author.send(` 
+
 -🚀 سرعه اتصال ممتازه
 -😎 سهل الاستخدام
 -⚠ صيانه كل يوم
 -💵 مجاني بل كامل
--📚 البوت عربي و سيتم اضافه اللغه النكليزية
+-📚البوت عربي و سيتم اضافه اللغه النكليزية
+
+
 ● ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ●
+
 💎『اوامر عامة』💎
 💎$server 『معلومات عن السيرفر』
 💎$date 『لمعرفه التاريخ』
 💎$ping 『لمعرفه سرعه البوت』
 💎$members 『معلومات عن الاعضاء』
-💎$say 『لي يكرر الكلام الذي تقوله』
 
 ● ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬ ●
 
@@ -582,6 +585,7 @@ message.author.send(`
 
 ملاحظه للتقديم علي رتبه اكتب 
 $apply
+
 `);
 }
 })
@@ -686,25 +690,6 @@ client.on('message' , message => {
  });
  
  
-
-
-client.on('message', message => {
-  if (message.author.bot) return;
-  if (!message.content.startsWith(prefix)) return;
-
-  let command = message.content.split(" ")[0];
-  command = command.slice(prefix.length);
-
-  let args = message.content.split(" ").slice(1);
-
-  if (command == "$say") {
-if(!message.member.hasPermission('ADMINISTRATOR')) return message.channel.send('?|**\`ADMINISTRATOR\`ليس لديك صلاحيات`**');
-
-
-   message.channel.sendMessage(args.join("  "))
-   message.delete()
-  }
- });
 
 
 
