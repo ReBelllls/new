@@ -545,8 +545,8 @@ message.author.send(`
 
 
 client.on('message', async rokz => {
- 
-    if(rokz.content.startsWith(prefix + "$apply")) {
+    var prefix = "$";
+    if(rokz.content.startsWith(prefix + "apply")) {
  
       let lang = '';
  
