@@ -31,33 +31,55 @@ client.on('ready', () => {
 
 
 
+
 client.on('message', message => {
+              if(!message.channel.guild) return;
     var prefix = "$";
-    
-        if (message.author.id === client.user.id) return;
-        if (message.guild) {
-       let embed = new Discord.RichEmbed()
-        let args = message.content.split(' ').slice(1).join(' ');
-    if(message.content.split(' ')[0] == prefix + 'bc') {
-        if (!args[1]) {
-    message.channel.send("*bc <message>");
-    return;
+    if(message.content.startsWith(prefix + 'bc')) {
+    if(!message.channel.guild) return message.channel.send('**هذا الأمر فقط للسيرفرات**').then(m => m.delete(5000));
+  if(!message.member.hasPermission('ADMINISTRATOR')) return      message.channel.send('**للأسف لا تمتلك صلاحية** `ADMINISTRATOR`' );
+    let args = message.content.split(" ").join(" ").slice(2 + prefix.length);
+    let copy = "reebel.";
+    let request = `Requested By ${message.author.username}`;
+    if (!args) return message.reply('```**يجب عليك كتابة كلمة او جملة لإرسال البرودكاست**```');message.channel.send(`**هل أنت متأكد من إرسالك البرودكاست؟ \nمحتوى البرودكاست:** \` ${args}\``).then(msg => {
+    msg.react('✅')
+    .then(() => msg.react('❌'))
+    .then(() =>msg.react('✅'))
+
+    let reaction1Filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id;
+    let reaction2Filter = (reaction, user) => reaction.emoji.name === '❌' && user.id === message.author.id;
+
+    let reaction1 = msg.createReactionCollector(reaction1Filter, { time: 12000 });
+    let reaction2 = msg.createReactionCollector(reaction2Filter, { time: 12000 });
+    reaction1.on("collect", r => {
+    message.channel.send(`☑ | تم ... ارسال البرودكاست بنجاح ${message.guild.members.size} Members`).then(m => m.delete(5000));
+    message.guild.members.forEach(m => {
+    var bc = new
+       Discord.RichEmbed()
+       .setColor('RANDOM')
+       .setTitle('برودكاست')
+       .addField('سيرفر', message.guild.name)
+       .addField('المرسل', message.author.username)
+       .addField('الرسالة', args)
+       .setThumbnail(message.author.avatarURL)
+       .setFooter(copy, client.user.avatarURL);
+    m.send({ embed: bc })
+    msg.delete();
+    })
+    })
+    reaction2.on("collect", r => {
+    message.channel.send(`**تم الغا البرودكاست.**`).then(m => m.delete(5000));
+    msg.delete();
+    })
+    })
     }
-            message.guild.members.forEach(m => {
-       if(!message.member.hasPermission('ADMINISTRATOR')) return;
-                var bc = new Discord.RichEmbed()
-                .addField('» السيرفر :', `${message.guild.name}`)
-                .addField('» المرسل : ', `${message.author.username}#${message.author.discriminator}`)
-                .addField(' » الرسالة : ', args)
-                .setColor('#ff0000')
-                // m.send(`[${m}]`);
-                m.send(`${m}`,{embed: bc});
-            });
-        }
-        } else {
-            return;
-        }
     });
+
+
+
+
+
+
 
 
 
@@ -638,88 +660,6 @@ client.on('message' , message => {
 
 
 
- client.on('message', message => {
-          if(!message.channel.guild) return;
-       if(message.content.startsWith(prefix + 'مسح')) {
-       if(!message.channel.guild) return message.channel.send('**This Command is Just For Servers**').then(m => m.delete(5000));
-       if(!message.member.hasPermission('MANAGE_MESSAGES')) return      message.channel.send('**You Do not have permission** `MANAGE_MESSAGES`' );
-       let args = message.content.split(" ").join(" ").slice(2 + prefix.length);
-       let request = `Requested By ${message.author.username}`;
-       message.channel.send(`**Are You sure you want to clear the chat?**`).then(msg => {
-       msg.react('✅')
-       .then(() => msg.react('❌'))
-       .then(() =>msg.react('✅'))
-
-       let reaction1Filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id;
-       let reaction2Filter = (reaction, user) => reaction.emoji.name === '❌' && user.id === message.author.id;
-
-       let reaction1 = msg.createReactionCollector(reaction1Filter, { time: 12000 });
-       let reaction2 = msg.createReactionCollector(reaction2Filter, { time: 12000 });
-       reaction1.on("collect", r => {
-       message.channel.send(`Chat will delete`).then(m => m.delete(5000));
-       var msg;
-               msg = parseInt();
-
-             message.channel.fetchMessages({limit: msg}).then(messages => message.channel.bulkDelete(messages)).catch(console.error);
-             message.channel.sendMessage("", {embed: {
-               title: "`` Chat Deleted ``",
-               color: 0x06DF00,
-               footer: {
-
-               }
-             }}).then(msg => {msg.delete(3000)});
-
-       })
-       reaction2.on("collect", r => {
-       message.channel.send(`**Chat deletion cancelled**`).then(m => m.delete(5000));
-       msg.delete();
-       })
-       })
-       }
-       });
-
-
-     
-client.on('message', message => {
-      if (message.content === "$Server") {
-      let embed = new Discord.RichEmbed()
-     .setColor("RANDOM")
-     .setThumbnail(message.author.avatarURL)
-     .setTitle(`info about ${message.guild.name}`)
-     .addField("Server Owner 👑",`➥ ` + `${message.guild.owner.user.username}`, true)
-     .addField('Server ID 🆔',`➥` + message.guild.id, true)
-     .addField("Owner Tag",`➥ ` +  `#` + message.guild.owner.user.discriminator, true)
-     .addField("Owner ID 🆔",`➥ ` + message.guild.owner.user.id, true)
-     .addField("Server Region📡",`➥ ` + message.guild.region, true)
-     .addField("Server Member Size🏧",`➥ ` + message.guild.members.size, true)
-     .addField("Server Channels Number🏧",`➥ ` + message.guild.channels.size, true)
-     .addField("Server Roels Number🏧",`➥ ` + message.guild.roles.size, true)
-     .addField("AFK channel💤",`➥ ` + message.guild.afkChannel || 'Null', true)
-     .addField("Server Created AT",`➥ ` + message.guild.createdAt, true)
-     .addField(`info about ${message.author.username}`, `➥ `)
-     .addField("Name",`➥ ` + `${message.author.username}`, true)
-     .addField('Tag',`➥ ` + "#" +  message.author.discriminator, true)
-     .addField("ID 🆔",`➥ ` + message.author.id, true)
-     .addField(" Account Created At",`➥ ` + message.author.createdAt, true)
-     .setTimestamp()
-     .setFooter(message.author.tag, message.author.avatarURL)
-
-
-     message.channel.sendEmbed(embed);
-       }
-   });
-
-
-client.on('message', message => {
-       var prefix = "$"
-       if (message.content === prefix + "date") {
-           var currentTime = new Date(),
-               السنة = currentTime.getFullYear(),
-               الشهر = currentTime.getMonth() + 1,
-               اليوم = currentTime.getDate();
-           message.channel.sendMessage( "التاريخ : " + اليوم + "-" + الشهر + "-" +السنة)
-       }
-   });
 
 
 
