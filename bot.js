@@ -15,7 +15,7 @@ client.on('guildMemberAdd', member=> {
 // حالة البوت او الوصف
 
 client.on('ready', () => {
-     client.user.setActivity("!~[ Syestem  ]~!",https://www.twitch.tv/ حب بلا حدود)
+     client.user.setActivity("!~[ Syestem  ]~!",{type: 'WATCHING'})
 
 });
 
